@@ -33,6 +33,8 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env
 .env.local
+.env.development
+.env.production
 
 # vercel
 .vercel
@@ -40,3 +42,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Docker compose files
+docker-compose.yml
+docker-compose.development.yml
+docker-compose.production.yml

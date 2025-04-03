@@ -2,18 +2,21 @@ import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import type { Readable } from "stream";
-
-const FILE_STORAGE_DIR = process.env.FILE_STORAGE_DIR || "";
-if (!FILE_STORAGE_DIR) {
-  throw new Error("FILE_STORAGE_DIR environment variable is not set");
-}
+import { loadEnv } from "@/lib/env";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { filename: string } },
+  {
+    params,
+  }: {
+    params: Promise<{
+      filename: string;
+    }>;
+  },
 ) {
   try {
-    const { filename } = params;
+    const env = loadEnv();
+    const { filename } = await params;
 
     // Validate filename
     if (!filename || !isValidFilename(filename)) {
@@ -21,10 +24,10 @@ export async function GET(
     }
 
     // Construct safe file path
-    const filepath = path.join(FILE_STORAGE_DIR, filename);
+    const filepath = path.join(env.FILE_STORAGE_DIR, filename);
 
     // Verify path is within allowed directory
-    if (!isPathWithinDirectory(filepath, FILE_STORAGE_DIR)) {
+    if (!isPathWithinDirectory(filepath, env.FILE_STORAGE_DIR)) {
       return new NextResponse("Access denied", { status: 403 });
     }
 

@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  app:
+    image: file-server:latest
+    env_file: .env.production
+    ports:
+      - ${HOST_PORT}:3000
+    volumes:
+      # Mount host file storage directory as read-only volume
+      - ${HOST_FILE_STORAGE_DIR}:/app/file-storage:ro
