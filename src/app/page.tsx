@@ -2,14 +2,14 @@
 
 import { FileDisplay } from "@/components/file-display";
 import { useCallback, useEffect, useState } from "react";
+import { listFilenames } from "@/lib/api/files";
 
 export default function Home() {
   const [filenames, setFilenames] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const loadFilenames = useCallback(async () => {
-    const res = await fetch("/api/files", { method: "GET" });
-    const filenames = await res.json();
+    const filenames = await listFilenames();
 
     // Update state
     setFilenames(filenames);
