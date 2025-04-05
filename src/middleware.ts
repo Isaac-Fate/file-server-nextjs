@@ -1,12 +1,8 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { loadEnv } from "@/lib/env";
+import { cookies } from "next/headers";
 import * as jose from "jose";
 
 export async function middleware(request: NextRequest) {
-  // Load environment variables
-  const env = loadEnv();
-
   // Get the auth header
   const authHeader = request.headers.get("authorization");
 
@@ -14,7 +10,7 @@ export async function middleware(request: NextRequest) {
     // Get the API key from the bearer token
     const apiKey = authHeader.replace("Bearer ", "");
 
-    if (apiKey === env.API_KEY) {
+    if (apiKey === process.env.API_KEY!) {
       return NextResponse.next();
     } else {
       return NextResponse.json({ error: "invalid API key" }, { status: 400 });
@@ -33,7 +29,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     // Encode the JWT secret
-    const secret = new TextEncoder().encode(env.JWT_SECRET);
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
 
     // Decrypt the auth token
     await jose.jwtDecrypt(authToken, secret, {
@@ -49,5 +45,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/api/files/:path*", "/api/health"],
+  matcher: ["/files/:path*", "/api/((?!auth\\b).*)"],
 };
