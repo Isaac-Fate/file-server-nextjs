@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Simple File Server with Next.js
 
-## Getting Started
+A simple file server with API access, containerized for easy deployment.
 
-First, run the development server:
+## Features
+
+- 🐳 Docker-ready with multi-platform support
+- 🔐 API key authentication
+- 📁 File browsing and downloading
+- 📦 Pre-built images available on Docker Hub
+
+## Installation
+
+### Option 1: Build from Source
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Isaac-Fate/file-server-nextjs.git
+git checkout v0.1.0
+cp .env.example .env.production
+cp docker-compose.example.yml docker-compose.yml
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Edit both files with your configuration, then:
+```bash
+docker-compose up -d
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Option 2: Use Pre-Built Image
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Modify `docker-compose.yml`:
+```yaml
+services:
+  app:
+    image: isaacfei/file-server-nextjs:0.1.0
+    # Keep other configurations
+```
 
-## Learn More
+Then run:
+```bash
+docker-compose up -d
+```
 
-To learn more about Next.js, take a look at the following resources:
+## API Reference
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Authentication
+Include in headers:
+```http
+Authorization: Bearer <API_KEY>
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Endpoints
 
-## Deploy on Vercel
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET`  | `/api/files?path=<DIR>` | List directory contents |
+| `GET`  | `/api/download/<PATH>` | Download a file |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Examples
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Directory Structure:**
+```
+data/
+├── hello.txt
+└── logs/
+    └── abc.log
+```
+
+**List root directory:**
+```http
+GET /api/files HTTP/1.1
+Host: localhost:3000
+```
+
+**List logs directory:**
+```http
+GET /api/files?path=logs HTTP/1.1
+Host: localhost:3000
+```
+
+**Download a file:**
+```http
+GET /api/download/logs/abc.log HTTP/1.1
+Host: localhost:3000
+```
+
+## Configuration
+
+Required environment variables (set in `.env.production`):
+
+```ini
+API_KEY=your_api_key_here
+JWT_SECRET=your_jwt_secret
+FILE_STORAGE_ROOT_DIR=/app/file-storage
+```
+
