@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SignInFormDataSchema } from "@/models/sign-in-form-data";
-import * as jose from "jose";
 import { cookies } from "next/headers";
+import { createAuthToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   // Parse the request data
@@ -11,20 +11,11 @@ export async function POST(request: NextRequest) {
   const apiKey = signInFormData.apiKey;
 
   if (apiKey !== process.env.API_KEY!) {
-    return NextResponse.json({ error: "Invalid API key" }, { status: 400 });
+    return NextResponse.json({ error: "invalid API key" }, { status: 400 });
   }
 
-  // Encode the JWT secret
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-
   // Create a JWT token
-  const authToken = await new jose.EncryptJWT({
-    authorized: true,
-  })
-    .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
-    .setIssuedAt()
-    .setExpirationTime(process.env.JWT_EXPIRATION_TIME!)
-    .encrypt(secret);
+  const authToken = await createAuthToken();
 
   // Put the token into the cookie
   const cookieStore = await cookies();

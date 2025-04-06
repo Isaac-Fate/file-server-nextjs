@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import * as jose from "jose";
+import { decryptAuthToken } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   // Get the auth header
@@ -28,14 +28,10 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    // Encode the JWT secret
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-
     // Decrypt the auth token
-    await jose.jwtDecrypt(authToken, secret, {
-      contentEncryptionAlgorithms: ["A256GCM"],
-      keyManagementAlgorithms: ["dir"],
-    });
+    const { payload } = await decryptAuthToken(authToken);
+
+    // We don't need to do anything with the payload though
   } catch (e) {
     console.error(`failed to verify the auth token: ${e}`);
     return NextResponse.redirect(new URL("/auth", request.url));
@@ -45,5 +41,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/files/:path*", "/api/((?!auth\\b).*)"],
+  matcher: ["/storage/:path*", "/api/((?!auth\\b).*)"],
 };

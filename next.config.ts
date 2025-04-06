@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/",
-        destination: "/files",
+        destination: "/storage",
         permanent: false,
       },
     ];

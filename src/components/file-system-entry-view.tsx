@@ -8,7 +8,7 @@ export function FileSystemEntryView({
   path,
   isDirectory,
 }: FileSystemEntryViewProps) {
-  const href = isDirectory ? `/files/${path}` : `/api/files/${path}`;
+  const href = isDirectory ? `/storage/${path}` : `/api/download/${path}`;
   const download = isDirectory ? undefined : name;
   const Icon = isDirectory ? FolderIcon : FileIcon;
 

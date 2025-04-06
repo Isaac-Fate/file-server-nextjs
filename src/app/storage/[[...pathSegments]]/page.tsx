@@ -13,7 +13,7 @@ export default async function Page({
 
   return (
     <div className="flex h-full flex-col items-center justify-center p-8">
-      <Card className="flex h-full w-full max-w-[30rem] flex-col">
+      <Card className="flex h-full max-h-[40rem] w-full max-w-[40rem] flex-col">
         <CardHeader>
           <CardTitle>File Server</CardTitle>
         </CardHeader>
