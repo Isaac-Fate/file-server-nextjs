@@ -2,6 +2,8 @@
 
 A simple file server with API access, containerized for easy deployment.
 
+Check out the 📄 [blog post](https://isaacfei.com/posts/file-server-nextjs).
+
 ## Features
 
 - 🐳 Docker-ready with multi-platform support
@@ -52,8 +54,8 @@ Authorization: Bearer <API_KEY>
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET`  | `/api/files?path=<DIR>` | List directory contents |
-| `GET`  | `/api/download/<PATH>` | Download a file |
+| GET  | `/api/files?path=<DIR>` | List directory contents |
+| GET  | `/api/download/<PATH>` | Download a file |
 
 ## Examples
 
